@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0a0a09;
+  --color-panel: #141412;
+  --color-panel-2: #1c1c19;
+  --color-line: #2a2a26;
+  --color-bone: #ece7dc;
+  --color-dust: #8f8a7e;
+  --color-blood: #e0182d;
+  --color-ember: #ff6a2b;
+  --color-crown: #e2b33c;
+  --font-display: "Teko", "Arial Narrow", sans-serif;
+  --font-body: "Barlow", system-ui, sans-serif;
+}
+
+html {
+  background: var(--color-ink);
+  color: var(--color-bone);
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--font-body);
+  min-height: 100dvh;
+  background:
+    radial-gradient(1200px 500px at 50% -200px, rgb(224 24 45 / 0.18), transparent 70%),
+    var(--color-ink);
+}
+
+/* Grain léger façon écran de lobby 2017 */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.panel {
+  background: linear-gradient(180deg, var(--color-panel-2), var(--color-panel));
+  border: 1px solid var(--color-line);
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
