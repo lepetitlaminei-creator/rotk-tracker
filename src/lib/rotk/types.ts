@@ -38,10 +38,9 @@ export type UpdatePost = {
   publishedAt: string;
 };
 
-// Classement, saisons et ligues : relevés le 2026-10-25 dans le code du site
-// (rotk.app/leaderboard). /api/leaderboard/seasons et /api/league/* ont été
-// appelés pour de vrai ; /players et /games étaient en panne chez ROTK
-// (500, 429, 504), leur forme vient donc du code JS et reste à confirmer.
+// Classement, saisons et ligues, relevés le 2026-10-25. /players, /seasons et
+// /api/league/* sont vérifiés sur de vraies réponses ; /games était encore en
+// panne chez ROTK, sa forme vient du code JS du site et reste à confirmer.
 
 export type LadderMode = "solo" | "duos" | "trios" | "fives";
 export type MatchType = "public" | "league" | "tournament";
@@ -80,11 +79,16 @@ export type PlayerRow = {
   deaths: number;
   games: number;
   countedGames: number;
+  averageKills: number;
   averagePlacement: number;
+  bestKillGame: { kills: number; placement: number };
   bestScore: number;
   lastPlayed: string;
-  progression?: {
+  progression: {
     badge: ProgressionBadge;
+    countedGames: number;
+    score: number;
+    ruleset: string;
     placementGamesRemaining: number;
     nextDivisionScore: number | null;
   };
@@ -107,9 +111,16 @@ export type GameRow = {
 };
 
 export type LadderPage<Row> = {
-  season: { name: string } | null;
+  season: LeaderboardSeason | { name: string } | null;
   total: number;
   rows: Row[];
+};
+
+// /players renvoie en plus la région et le nombre de parties comptées.
+export type PlayersPage = LadderPage<PlayerRow> & {
+  countedGames: number;
+  region: RegionCode;
+  season: LeaderboardSeason | null;
 };
 
 export type LadderQuery = {

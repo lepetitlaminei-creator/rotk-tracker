@@ -26,7 +26,7 @@ GitHub ne lance les workflows planifiés qu'une fois le fichier présent sur `ma
 | `rotk.app/api/status` | joueurs en ligne par région et mode | branché |
 | `rotk.app/api/updates` | patch notes et news | branché |
 | branche `data` du dépôt | relevé horaire du statut | branché |
-| `rotk.app/api/leaderboard/*` | classement, saisons, plus grosses parties | branché (format à confirmer, en panne chez ROTK au 2026-10-25) |
+| `rotk.app/api/leaderboard/*` | classement, saisons, plus grosses parties | branché (`/players` vérifié ; `/games` encore en panne chez ROTK au 2026-10-25) |
 | `rotk.app/api/league/*` | ligues et tournois | branché |
 | branche `data` du dépôt | relevé du top 150 toutes les 3 h | branché |
 
@@ -34,7 +34,7 @@ Détail des endpoints : [docs/rotk-api.md](docs/rotk-api.md).
 
 ## Feuille de route
 
-1. Données : confirmer le format du classement quand ROTK le remet en ligne.
+1. Données : confirmer le format des plus grosses parties quand ROTK remet `/games` en ligne.
 2. Site : recherche de joueur, comparaison entre potes.
 3. App Windows : même interface, plus suivi de session et notifications de montée de rang.
 4. Extras : groupes, tournois, records, overlay.

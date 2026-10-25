@@ -42,7 +42,7 @@ export default async function PlayerPage({ params, searchParams }: Props) {
   const row = found.status === "fulfilled" ? found.value?.row : undefined;
   const last = samples.at(-1);
   const name = row?.displayName ?? last?.n ?? "Joueur inconnu";
-  const division = row?.progression ? badgeDivision(row.progression.badge.tier) : null;
+  const division = row ? badgeDivision(row.progression.badge.tier) : null;
   const season = seasons?.seasons.find((s) => s.key === p.season);
   const accent = division ? DIVISION_COLORS[division] : "var(--color-blood)";
 
@@ -62,7 +62,7 @@ export default async function PlayerPage({ params, searchParams }: Props) {
           <h1 className="font-display text-6xl leading-none break-all">{name}</h1>
           <div className="mt-2">
             {row ? (
-              <RankBadge badge={row.progression?.badge} placementLeft={row.progression?.placementGamesRemaining} />
+              <RankBadge badge={row.progression.badge} placementLeft={row.progression.placementGamesRemaining} />
             ) : null}
           </div>
         </div>
@@ -141,20 +141,24 @@ function Stat({ label, value, hint }: { label: string; value: string; hint?: str
 
 function Stats({ row }: { row: NonNullable<Awaited<ReturnType<typeof findPlayer>>>["row"] }) {
   const games = Math.max(row.games, 1);
-  const next = row.progression?.nextDivisionScore;
+  const next = row.progression.nextDivisionScore;
   return (
     <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
       <Stat label="Wins" value={formatNumber(row.wins)} hint={`${((row.wins / games) * 100).toFixed(1)} % des parties`} />
-      <Stat label="Kills" value={formatNumber(row.kills)} hint={`${(row.kills / games).toFixed(2)} par partie`} />
+      <Stat label="Kills" value={formatNumber(row.kills)} hint={`${row.averageKills.toFixed(1)} par partie`} />
       <Stat label="K/D" value={(row.kills / Math.max(row.deaths, 1)).toFixed(2)} hint={`${formatNumber(row.deaths)} morts`} />
       <Stat label="Parties" value={formatNumber(row.games)} hint={`dernière ${formatRelative(row.lastPlayed)}`} />
       <Stat label="Place moyenne" value={row.averagePlacement.toFixed(1)} />
       <Stat label="Meilleure partie" value={formatNumber(row.bestScore)} hint="points" />
-      <Stat label="Parties comptées" value={`${row.countedGames}`} hint="meilleures parties de la saison" />
+      <Stat
+        label="Record de kills"
+        value={formatNumber(row.bestKillGame.kills)}
+        hint={row.bestKillGame.placement === 1 ? "avec la victoire" : `fini #${row.bestKillGame.placement}`}
+      />
       <Stat
         label="Prochaine division"
         value={next ? formatNumber(Math.max(next - row.score, 0)) : "—"}
-        hint={next ? "points à gagner" : "division max ou inconnue"}
+        hint={next ? "points à gagner" : "division maximale atteinte"}
       />
     </section>
   );

@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
       limit: PAGE_SIZE,
       offset: (Math.min(p.page, 3) - 1) * PAGE_SIZE,
     });
-    return NextResponse.json({ region: p.region, mode: p.mode, seasonKey: p.season, ...ladder });
+    return NextResponse.json({ ...ladder, region: p.region, mode: p.mode, seasonKey: p.season });
   } catch (err) {
     const status = err instanceof RotkApiError && err.status ? err.status : 502;
     return NextResponse.json({ error: err instanceof Error ? err.message : "Erreur ROTK" }, { status });

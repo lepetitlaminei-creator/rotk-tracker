@@ -135,7 +135,7 @@ async function PlayersView({ params, seasons }: { params: LadderParams; seasons:
   const { rows, total } = ladder.value;
   const prevRanks = previous.status === "fulfilled" ? previous.value : new Map<string, number>();
   const pages = Math.min(Math.ceil(total / PAGE_SIZE), lastPage);
-  const counted = seasons?.countedGames ?? BEST_MATCHES_COUNTED;
+  const counted = ladder.value.countedGames ?? seasons?.countedGames ?? BEST_MATCHES_COUNTED;
 
   if (rows.length === 0) {
     return <div className="panel p-6 text-dust">Personne n&apos;est encore classé ici pour cette saison.</div>;
@@ -175,8 +175,8 @@ async function PlayersView({ params, seasons }: { params: LadderParams; seasons:
                 </td>
                 <td className="px-2 py-2">
                   <RankBadge
-                    badge={row.progression?.badge}
-                    placementLeft={row.progression?.placementGamesRemaining}
+                    badge={row.progression.badge}
+                    placementLeft={row.progression.placementGamesRemaining}
                   />
                 </td>
                 <td className="px-2 py-2 text-right tabular text-bone">{formatNumber(row.score)}</td>
@@ -260,7 +260,7 @@ function Podium({ rows, params }: { rows: PlayerRow[]; params: LadderParams }) {
               {formatNumber(row.wins)} wins · {formatNumber(row.kills)} kills · K/D {kd(row)}
             </p>
             <div className="mt-2">
-              <RankBadge badge={row.progression?.badge} />
+              <RankBadge badge={row.progression.badge} />
             </div>
           </Link>
         );

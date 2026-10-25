@@ -5,7 +5,7 @@ import type {
   LeaderboardSeasons,
   LeagueSeason,
   LeagueStandings,
-  PlayerRow,
+  PlayersPage,
   ServerStatus,
   UpdatePost,
 } from "./types";
@@ -76,8 +76,8 @@ export function getLeaderboardSeasons(): Promise<LeaderboardSeasons> {
 export const PUBLIC_LADDER_DEPTH = 150;
 export const PAGE_SIZE = 50;
 
-export function getLeaderboardPlayers(q: LadderQuery): Promise<LadderPage<PlayerRow>> {
-  return getJson<LadderPage<PlayerRow>>(`/api/leaderboard/players?${query(q)}`, 120);
+export function getLeaderboardPlayers(q: LadderQuery): Promise<PlayersPage> {
+  return getJson<PlayersPage>(`/api/leaderboard/players?${query(q)}`, 120);
 }
 
 export function getLeaderboardGames(q: LadderQuery): Promise<LadderPage<GameRow>> {
