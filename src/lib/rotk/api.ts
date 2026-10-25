@@ -27,7 +27,7 @@ export function getServerStatus(): Promise<ServerStatus> {
 
 export async function getUpdates(): Promise<UpdatePost[]> {
   const data = await getJson<{ updates: UpdatePost[] }>("/api/updates", 600);
-  return data.updates;
+  return data.updates ?? [];
 }
 
 export function absoluteAsset(path: string): string {
