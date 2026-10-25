@@ -17,10 +17,12 @@ export type Tier = "V" | "IV" | "III" | "II" | "I";
 
 export const TIERS: Tier[] = ["V", "IV", "III", "II", "I"];
 
-// Points observés : une victoire vaut 175 000, un kill 1 000.
+// Barème affiché sur rotk.app/leaderboard : victoire 175 000, kill (solo) ou
+// kill d'équipe 1 000, assist d'équipe (hors solo) 250.
 // Le score de saison additionne les 10 meilleures parties.
 export const POINTS_PER_WIN = 175_000;
 export const POINTS_PER_KILL = 1_000;
+export const POINTS_PER_ASSIST = 250;
 export const BEST_MATCHES_COUNTED = 10;
 
 export const KNOWN_THRESHOLDS: Partial<Record<`${Division} ${Tier}`, number>> = {
@@ -47,3 +49,16 @@ export const DIVISION_LABELS_FR: Record<Division, string> = {
   Master: "Maître",
   Royalty: "Royalty",
 };
+
+// Badge renvoyé par l'API : tier 0 = non classé, 1..7 = Bronze..Royalty ;
+// subtier 1..5 = I..V.
+export function badgeDivision(tier: number): Division | null {
+  return DIVISIONS[tier - 1] ?? null;
+}
+
+export function badgeLabel(badge: { tier: number; subtier: number } | undefined): string {
+  const division = badge ? badgeDivision(badge.tier) : null;
+  if (!badge || !division) return "Non classé";
+  const roman = (["I", "II", "III", "IV", "V"] as const)[badge.subtier - 1] ?? "";
+  return `${DIVISION_LABELS_FR[division]} ${roman}`.trim();
+}
