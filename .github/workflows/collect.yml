@@ -1,7 +1,7 @@
 name: Relevé horaire ROTK
 
-# Enregistre le statut ROTK chaque heure sur la branche `data`,
-# que le site relit pour les courbes d'historique.
+# Enregistre le statut ROTK chaque heure, et le top 150 du classement toutes
+# les 3 heures, sur la branche `data` que le site relit pour l'historique.
 on:
   schedule:
     - cron: "7 * * * *"
@@ -37,11 +37,20 @@ jobs:
       - name: Relever le statut
         run: node scripts/collect-status.mjs data-branch
 
+      # Le classement de rotk.app tombe parfois en panne : ça ne doit pas
+      # empêcher d'enregistrer le statut.
+      - name: Relever le classement
+        continue-on-error: true
+        env:
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && '1' || '0' }}
+        run: node scripts/collect-leaderboard.mjs data-branch
+
       - name: Enregistrer
         working-directory: data-branch
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
           git add status
+          git add leaderboard 2>/dev/null || true
           git commit -qm "Relevé $(date -u +%Y-%m-%dT%H:%MZ)"
           git push origin data
