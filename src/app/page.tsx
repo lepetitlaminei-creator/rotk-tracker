@@ -1,6 +1,8 @@
 import { AutoRefresh } from "@/components/AutoRefresh";
+import { HistoryChart } from "@/components/HistoryChart";
 import { ModeBar } from "@/components/ModeBar";
 import { absoluteAsset, getServerStatus, getUpdates } from "@/lib/rotk/api";
+import { getStatusHistory } from "@/lib/rotk/history";
 import { formatNumber, regionLabel } from "@/lib/rotk/labels";
 import type { ModeCounts, ServerStatus, UpdatePost } from "@/lib/rotk/types";
 
@@ -15,7 +17,11 @@ function sumModes(status: ServerStatus): ModeCounts {
 }
 
 export default async function LivePage() {
-  const [status, updates] = await Promise.allSettled([getServerStatus(), getUpdates()]);
+  const [status, updates, history] = await Promise.allSettled([
+    getServerStatus(),
+    getUpdates(),
+    getStatusHistory(7),
+  ]);
 
   return (
     <div className="space-y-10">
@@ -26,6 +32,14 @@ export default async function LivePage() {
         <div className="panel p-6 text-dust">
           Impossible de joindre rotk.app pour le moment. La page réessaie toute seule chaque minute.
         </div>
+      )}
+      {history.status === "fulfilled" && (
+        <section className="panel p-6">
+          <h2 className="font-display text-2xl">Affluence sur 7 jours</h2>
+          <div className="mt-3">
+            <HistoryChart samples={history.value} />
+          </div>
+        </section>
       )}
       {updates.status === "fulfilled" && updates.value.length > 0 && <News updates={updates.value.slice(0, 3)} />}
     </div>
